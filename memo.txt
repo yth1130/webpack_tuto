@@ -1,0 +1,4 @@
+웹팩 참고: https://webpack.js.org/guides/getting-started/
+
+dist폴더가 gitignore에 포함되어 index.html을 src에 복사해 둠.
+클론 저장소에서는 dist폴더를 만들어 src/index.html을 복사할 것.
