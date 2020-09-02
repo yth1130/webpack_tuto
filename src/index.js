@@ -11,6 +11,7 @@ import './style.css';
 // import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 import { OrbitControls } from 'three/examples//jsm/controls/OrbitControls'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
+import { GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader'
 
 // import Parrot from './assets/Parrot.FBX';
 
@@ -146,6 +147,23 @@ function main() {
         null,
         (error) => { console.log(error) }
     )
+
+    // const gltfLoader = new GLTFLoader();
+    // gltfLoader.load(
+    //     'assets/parrot.gltf',
+    //     (object) => {
+    //         object.scale.x = .01
+    //         object.scale.y = .01
+    //         object.scale.z = .01
+    //         object.position.y = 1
+    //         scene.add(object.scene);
+    //         birdMesh = object.children[0];
+    //         // (birdMesh as THREE.Mesh).material = normalMaterial
+    //         birdMesh.material = birdMaterial
+    //     },
+    //     null,
+    //     (error) => { console.log(error) }
+    // )
 
     function makeInstance(geometry, color, x) {
         const material = new THREE.MeshPhongMaterial({ color });
