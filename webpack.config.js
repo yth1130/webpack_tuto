@@ -6,9 +6,11 @@ const CopyPlugin = require('copy-webpack-plugin');
 module.exports = {
     // entry: './src/index.js',
     entry: {
-        app: './src/index.js',
+        // app: './src/index.js',
+        app: './src/index.ts',
         print: './src/print.js',
     },
+    devtool: 'inline-source-map', //용량 무지 늘어남.
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
@@ -16,18 +18,17 @@ module.exports = {
         }),
         new CopyPlugin({
             patterns: [
-                { from: 'src/assets', to: 'assets' },
+                { from: 'src/assets/models', to: 'assets/models' },
             ]
         })
     ],
-    output: {
-        // filename: 'main.js',
-        // filename: 'bundle.js',
-        filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'dist'),
-    },
     module: {
         rules: [
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
             {
                 test: /\.css$/,
                 use: [
@@ -54,5 +55,14 @@ module.exports = {
                 ]
             },
         ],
+    },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
+    },
+    output: {
+        // filename: 'main.js',
+        // filename: 'bundle.js',
+        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, 'dist'),
     },
 };

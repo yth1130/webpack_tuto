@@ -2,3 +2,16 @@
 
 dist폴더가 gitignore에 포함되어 index.html을 src에 복사해 둠.
 클론 저장소에서는 dist폴더를 만들어 src/index.html을 복사할 것.
+
+typescript 관련 모듈. 추가했다가 삭제함.
+@types/node @types/lodash tslib
+
+참고자료
+
+https://webpack.js.org/guides/typescript/
+
+three.js 튜토리얼
+https://threejsfundamentals.org/threejs/lessons/kr/
+
+Three.js and TypeScript Tutorials
+https://sbcode.net/threejs/

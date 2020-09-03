@@ -100,9 +100,10 @@ function main() {
     const near = 0.1;
     const far = 100;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.z = 2;
+    camera.position.z = 10;
 
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color('#333333');
 
     const boxWidth = 1;
     const boxHeight = 1;
@@ -130,23 +131,23 @@ function main() {
     const birdMaterial = new THREE.MeshToonMaterial();
     let birdMesh; //: THREE.Object3D;
 
-    const objLoader = new OBJLoader();
-    // objLoader.parse
-    objLoader.load(
-        'assets/parrot.obj',
-        (object) => {
-            object.scale.x = .01
-            object.scale.y = .01
-            object.scale.z = .01
-            object.position.y = 1
-            scene.add(object);
-            birdMesh = object.children[0];
-            // (birdMesh as THREE.Mesh).material = normalMaterial
-            birdMesh.material = birdMaterial
-        },
-        null,
-        (error) => { console.log(error) }
-    )
+    // const objLoader = new OBJLoader();
+    // // objLoader.parse
+    // objLoader.load(
+    //     'assets/parrot.obj',
+    //     (object) => {
+    //         object.scale.x = .01
+    //         object.scale.y = .01
+    //         object.scale.z = .01
+    //         object.position.y = 1
+    //         scene.add(object);
+    //         birdMesh = object.children[0];
+    //         // (birdMesh as THREE.Mesh).material = normalMaterial
+    //         birdMesh.material = birdMaterial
+    //     },
+    //     null,
+    //     (error) => { console.log(error) }
+    // )
 
     // const gltfLoader = new GLTFLoader();
     // gltfLoader.load(
@@ -164,6 +165,51 @@ function main() {
     //     null,
     //     (error) => { console.log(error) }
     // )
+    function dumpVec3(v3, precision = 3) {
+        return `${v3.x.toFixed(precision)}, ${v3.y.toFixed(precision)}, ${v3.z.toFixed(precision)}`;
+    }
+
+    function dumpObject(obj, lines = [], isLast = true, prefix = '') {
+        const localPrefix = isLast ? '└─' : '├─';
+        lines.push(`${prefix}${prefix ? localPrefix : ''}${obj.name || '*no-name*'} [${obj.type}]`);
+
+        const dataPrefix = obj.children.length
+           ? (isLast ? '  │ ' : '│ │ ')
+           : (isLast ? '    ' : '│   ');
+        lines.push(`${prefix}${dataPrefix}  pos: ${dumpVec3(obj.position)}`);
+        lines.push(`${prefix}${dataPrefix}  rot: ${dumpVec3(obj.rotation)}`);
+        lines.push(`${prefix}${dataPrefix}  scl: ${dumpVec3(obj.scale)}`);
+
+        const newPrefix = prefix + (isLast ? '  ' : '│ ');
+        const lastNdx = obj.children.length - 1;
+        obj.children.forEach((child, ndx) => {
+          const isLast = ndx === lastNdx;
+          dumpObject(child, lines, isLast, newPrefix);
+        });
+        return lines;
+    }
+
+    const gltfLoader = new GLTFLoader();
+    const url = 'assets/parrot.gltf'; //'resources/models/cartoon_lowpoly_small_city_free_pack/scene.gltf';
+    gltfLoader.load(url, (gltf) => {
+        const root = gltf.scene;
+        scene.add(root);
+        root.scale.set(.5,.5,.5);
+        console.log(dumpObject(root).join('\n'));
+    });
+
+    gltfLoader.load('assets/ring.gltf', (gltf) => {
+        const root = gltf.scene;
+        scene.add(root);
+        console.log(dumpObject(root).join('\n'));
+    });
+
+
+    // const torusGeometry = new THREE.TorusBufferGeometry(10,1,9,25);
+    // //radius, tubeRadius,
+    // //radialSegments, tubularSegments);
+    // const torus = makeInstance(torusGeometry, 0xff0000, 3);
+    // torus.scale.set(0.1,0.1,0.1);
 
     function makeInstance(geometry, color, x) {
         const material = new THREE.MeshPhongMaterial({ color });
@@ -176,11 +222,11 @@ function main() {
         return cube;
     }
 
-    const cubes = [
-        makeInstance(geometry, 0x44aa88, 0),
-        makeInstance(geometry, 0x8844aa, -2),
-        makeInstance(geometry, 0xaa8844, 2),
-    ]
+    // const cubes = [
+    //     makeInstance(geometry, 0x44aa88, 0),
+    //     makeInstance(geometry, 0x8844aa, -2),
+    //     makeInstance(geometry, 0xaa8844, 2),
+    // ]
     // scene.add(cubes);
 
     // renderer.render(scene, camera);
@@ -216,12 +262,12 @@ function main() {
 
         // cube.rotation.x = time;
         // cube.rotation.y = time;
-        cubes.forEach((cube, ndx) => {
-            const speed = 1 + ndx * .1;
-            const rot = time * speed;
-            cube.rotation.x = rot;
-            cube.rotation.y = rot;
-        });
+        // cubes.forEach((cube, ndx) => {
+        //     const speed = 1 + ndx * .1;
+        //     const rot = time * speed;
+        //     cube.rotation.x = rot;
+        //     cube.rotation.y = rot;
+        // });
 
         controls.update()
 
